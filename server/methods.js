@@ -1,5 +1,3 @@
-var localeval = Npm.require('localeval');
-
 //We do this server side since we haven't found a better sandboxed eval (sandbox, shovel, etc..)
 Meteor.methods({
   "okgrow:package-linter#getPackageModel": function (packageJsCodeHopefully) {
