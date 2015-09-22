@@ -31,7 +31,8 @@ Package.onUse(function(api) {
 Npm.depends({
   "localeval": "15.2.3",
   "ddp": "0.11.0",
-  "latest-version": "1.0.0"
+  "latest-version": "1.0.0",
+  "semver": "5.0.3"
 });
 
 

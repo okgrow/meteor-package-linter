@@ -6,10 +6,9 @@ Meteor.methods({
     return new PackageModel(packageJsCodeHopefully);
   },
   "okgrow:package-linter#getLintErrors": function (packageJsCodeHopefully) {
-    console.log(packageJsCodeHopefully)
     check(packageJsCodeHopefully, String);
     var packageModel = new PackageModel(packageJsCodeHopefully);
-    return PackageLinter.getLintErrors(packageModel);
+    return Promise.await(PackageLinter.getLintErrors(packageModel));
   },
   "okgrow:package-linter#latestMeteorVersionOfPackage": function (name) {
     check(name, String);
