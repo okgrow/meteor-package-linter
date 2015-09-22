@@ -77,7 +77,7 @@ var syncLintRules = [
       var latestVersion = latestVersions[p];
       var currentVersion = packageModel.externalDeps.uses[p].versionNum;
       var diff = semver.diff(currentVersion, latestVersion); //major, minor, patch
-      if (diff !== "patch"){
+      if (diff === "major" || diff === "minor"){
         ruleErrs.push({code: code, severity: severity, offender: p, error: error,
           details: {latest: latestVersion, current: currentVersion, diff: diff}})
       }
