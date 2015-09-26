@@ -1,4 +1,4 @@
-# Travis Badge Markdown (add to README.md): [![Build Status](https://secure.travis-ci.org/deanius/meteor-sandbox.png?branch=master)](https://travis-ci.org/deanius/meteor-sandbox)
+# Travis Badge Markdown
 sudo: required
 language: node_js
 node_js:

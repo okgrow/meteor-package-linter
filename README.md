@@ -1,6 +1,6 @@
 # okgrow:package-linter
 
-http://package-kitchen.meteor.com/linter
+http://okgrow-package-builder.meteor.com/linter
 
 Is your Package.js file up to date and following best practices ?
 

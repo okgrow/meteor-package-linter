@@ -13,6 +13,7 @@ PackageModel = function PackageModel (packageJsCodeHopefully) {
       implies: {}
     },
     files: {},
+    assets: {},
     exports: {}
   };
 
@@ -50,6 +51,11 @@ PackageModel = function PackageModel (packageJsCodeHopefully) {
     },
     addFiles: function (filename, arch) {
       packageModel.files[filename] = _.extend({}, {
+        arch: arch && Array(arch)
+      })
+    },
+    addAssets: function (filename, arch) {
+      packageModel.assets[filename] = _.extend({}, {
         arch: arch && Array(arch)
       })
     },

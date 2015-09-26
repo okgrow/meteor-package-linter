@@ -15,7 +15,8 @@ PackageLinter = {
 var _deprecationMap = {
   "okgrow:iron-router-autoscroll": "okgrow:router-autoscroll",
   "meteorhacks:flow-router": "kadira:flow-router",
-  "deanius:promise": "okgrow:promise"
+  "deanius:promise": "okgrow:promise",
+  "urigo:angular": "angular"
 };
 
 var syncLintRules = [
