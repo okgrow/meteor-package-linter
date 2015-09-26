@@ -4,12 +4,7 @@ http://okgrow-package-builder.meteor.com/linter
 
 Is your Package.js file up to date and following best practices ?
 
-## Installation
+## See Also
 
-```
-    meteor add okgrow:package-linter
-```
-
-## Description
-
-TODO: Say some more along the lines of *"Description of package amazingness"*
+* `packagecheck` CLI utility: https://github.com/timothyarmes/packagecheck/
+* East5th's security scanner: http://scan.east5th.co/
