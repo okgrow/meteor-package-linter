@@ -99,6 +99,7 @@ var expectedModel1 = {
     },
     "shared/index2.js": {}
   },
+  "assets": {},
   "exports": {}
 };
 
@@ -118,7 +119,12 @@ Tinytest.add("Example File 1 - Linting", function (test) {
     severity: 1,
     offender: "okgrow:router-autoscroll",
     error: "External dependencies should declare a version",
-    details: {
+    replacements: [
+      "okgrow:router-autoscroll",
+      "okgrow:router-autoscroll@0.1.0"
+    ],
+    details: "should depend on 0.1.0",    
+    detailsObj: {
       "name":"okgrow:router-autoscroll",
       "versionSpec":null,
       "versionNum":null,
