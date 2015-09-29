@@ -29,26 +29,8 @@ PackageModel = function PackageModel (packageJsCodeHopefully) {
         versionIsExact: (nameAndVersion.indexOf("@=") > -1)
       };
     },
-    use: function (nameAndVersion, arch, options) {
-      if( _.isObject(arch) && ! _.isArray(arch)){ // passing options as the 2nd param, omitting arch
-        options=arch; arch = undefined;
-      }
-      var packageNamesAndVersions = _.isArray(nameAndVersion) ? nameAndVersion : Array(nameAndVersion);
-
-      packageNamesAndVersions.forEach(function (nameAndVersion) {
-        var section = packageModel[mockApi.depType(nameAndVersion) + "Deps"];
-        var versionInfo = mockApi.parseNameAndVersion(nameAndVersion);
-        section.uses[versionInfo.name] = _.extend(versionInfo, {
-          arch: _.isArray(arch) ? arch : (arch && Array(arch)),
-          options: options
-        });
-      });
-    },
-    imply: function (nameAndVersion, arch, options) {
-      var section = packageModel[this.depType(nameAndVersion) + "Deps"];
-      var versionInfo = this.parseNameAndVersion(nameAndVersion);
-      section.implies[versionInfo.name] = versionInfo;
-    },
+    use: addToSection("uses"),
+    imply: addToSection("implies"),
     addFiles: function (filename, arch) {
       packageModel.files[filename] = _.extend({}, {
         arch: arch && Array(arch)
@@ -68,6 +50,24 @@ PackageModel = function PackageModel (packageJsCodeHopefully) {
       })
     }
   };
+
+  function addToSection(section) {
+    return function (nameAndVersion, arch, options) {
+      if( _.isObject(arch) && ! _.isArray(arch)){ // passing options as the 2nd param, omitting arch
+        options=arch; arch = undefined;
+      }
+      var packageNamesAndVersions = _.isArray(nameAndVersion) ? nameAndVersion : Array(nameAndVersion);
+
+      packageNamesAndVersions.forEach(function (nameAndVersion) {
+        var parentSection = packageModel[mockApi.depType(nameAndVersion) + "Deps"];
+        var versionInfo = mockApi.parseNameAndVersion(nameAndVersion);
+        parentSection[section][versionInfo.name] = _.extend(versionInfo, {
+          arch: _.isArray(arch) ? arch : (arch && Array(arch)),
+          options: options
+        });
+      });
+    }
+  }
 
   var env = {
     Package: {

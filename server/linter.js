@@ -1,8 +1,18 @@
 //linter error types
 // 2.x - dependency issues
 var semver = Npm.require('semver');
+var latestVersions = {};
+
 PackageLinter = {
   getLintErrors: function (packageModel) {
+    /* populate the latestVersions dictionary */
+    var latestVersionPromises = _.keys(packageModel.externalDeps.uses).map(function (name) {
+        return latestMeteorVersionOfPackage(name).then(function(version){
+          latestVersions[name] = version;
+        })
+    });
+    Promise.await(Promise.all(latestVersionPromises));
+
     var syncErrors = syncLintRules.reduce(function (allErrs, rule) {
       var ruleErrs = rule(packageModel);
       return allErrs.concat(ruleErrs);
@@ -26,10 +36,20 @@ var syncLintRules = [
       error="External dependencies should declare a version",
       ruleErrs = [];
 
-    for (var p in packageModel.externalDeps.uses) {
-      var dep = packageModel.externalDeps.uses[p];
+    for (var usedPackage in packageModel.externalDeps.uses) {
+      var dep = packageModel.externalDeps.uses[usedPackage];
       if (!dep.versionNum) {
-        ruleErrs.push({code: code, severity: severity, offender: p, error: error, details: dep})
+        ruleErrs.push({
+          code: code,
+          severity: severity,
+          offender: usedPackage,
+          error: error,
+          replacements: [
+            usedPackage,
+            usedPackage + "@" + latestVersions[usedPackage]
+          ],
+          details: "should depend on " + latestVersions[usedPackage],
+          detailsObj: dep})
       }
     }
     return ruleErrs;
@@ -44,8 +64,8 @@ var syncLintRules = [
       var dep = packageModel.externalDeps.uses[usedPackage];
       var moreBetterName = _deprecationMap[usedPackage];
       if( moreBetterName ){
-        var moreBetterVersion = latestMeteorVersionOfPackage(moreBetterName);
-        var moreBetterVersion = Promise.await(moreBetterVersion);
+        //XXX use existing latestVersion dictionary
+        var moreBetterVersion = latestVersions[usedPackage];
         ruleErrs.push({
           code: code,
           severity: severity,
@@ -73,19 +93,10 @@ var syncLintRules = [
       error="Dependencies should not refer to versions outdated by more than a minor version.",
       ruleErrs = [];
 
-    var latestVersions = {};
-
-    var latestVersionPromises = _.keys(packageModel.externalDeps.uses).map(function (name) {
-        return latestMeteorVersionOfPackage(name).then(function(version){
-          latestVersions[name] = version;
-        })
-    });
-
-    Promise.await(Promise.all(latestVersionPromises));
-
     for (var usedPackage in packageModel.externalDeps.uses) {
       var latestVersion = latestVersions[usedPackage];
       var currentVersion = packageModel.externalDeps.uses[usedPackage].versionNum;
+      if (!currentVersion) continue;
       var diff = semver.diff(currentVersion, latestVersion); //major, minor, patch
       if (diff === "major" || diff === "minor"){
         ruleErrs.push({
