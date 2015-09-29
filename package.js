@@ -1,13 +1,13 @@
 Package.describe({
   name: "okgrow:package-linter",
   summary: "Linting your package.js files since Meteor 1.1",
-  version: "0.1.1",
+  version: "0.2.0",
   git: "https://github.com/okgrow/meteor-package-linter"
 });
 
 Package.onUse(function(api) {
   // Meteor releases below this version are not supported
-  api.versionsFrom("1.1.0.3");
+  api.versionsFrom("1.2.0.2");
 
   // Core packages and 3rd party packages
   api.use("ddp");
