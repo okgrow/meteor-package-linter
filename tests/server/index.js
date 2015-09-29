@@ -123,7 +123,7 @@ Tinytest.add("Example File 1 - Linting", function (test) {
       "okgrow:router-autoscroll",
       "okgrow:router-autoscroll@0.1.0"
     ],
-    details: "should depend on 0.1.0",    
+    details: "should depend on 0.1.0",
     detailsObj: {
       "name":"okgrow:router-autoscroll",
       "versionSpec":null,
