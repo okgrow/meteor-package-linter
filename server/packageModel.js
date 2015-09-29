@@ -83,7 +83,11 @@ PackageModel = function PackageModel (packageJsCodeHopefully) {
       getModel: function () {
         return packageModel;
       }
-  }};
+    },
+    Npm: {
+      depends: function () {}
+    }
+  };
 
   var result = localeval(packageJsCodeHopefully + '; Package.getModel()', env);
   try{
