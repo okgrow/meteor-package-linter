@@ -40,15 +40,24 @@ var syncLintRules = [
       error="Dependencies should not refer to deprecated versions.",
       ruleErrs = [];
 
-    for (var p in packageModel.externalDeps.uses) {
-      var dep = packageModel.externalDeps.uses[p];
-      var moreBetterName = _deprecationMap[p];
+    for (var usedPackage in packageModel.externalDeps.uses) {
+      var dep = packageModel.externalDeps.uses[usedPackage];
+      var moreBetterName = _deprecationMap[usedPackage];
       if( moreBetterName ){
         var moreBetterVersion = latestMeteorVersionOfPackage(moreBetterName);
         var moreBetterVersion = Promise.await(moreBetterVersion);
-        ruleErrs.push({code: code, severity: severity, offender: p, error: error,
-          details: {
-            oldName: p,
+        ruleErrs.push({
+          code: code,
+          severity: severity,
+          offender: usedPackage,
+          error: error,
+          replacements: [
+            usedPackage + "@" + dep.versionNum,
+            moreBetterName + "@" + moreBetterVersion
+          ],
+          details: usedPackage + "@" + dep.versionNum + " => " + moreBetterName + "@" + moreBetterVersion,
+          detailObj: {
+            oldName: usedPackage,
             oldVersion: dep.versionNum,
             newName: moreBetterName,
             newVersion: moreBetterVersion
@@ -74,13 +83,27 @@ var syncLintRules = [
 
     Promise.await(Promise.all(latestVersionPromises));
 
-    for (var p in packageModel.externalDeps.uses) {
-      var latestVersion = latestVersions[p];
-      var currentVersion = packageModel.externalDeps.uses[p].versionNum;
+    for (var usedPackage in packageModel.externalDeps.uses) {
+      var latestVersion = latestVersions[usedPackage];
+      var currentVersion = packageModel.externalDeps.uses[usedPackage].versionNum;
       var diff = semver.diff(currentVersion, latestVersion); //major, minor, patch
       if (diff === "major" || diff === "minor"){
-        ruleErrs.push({code: code, severity: severity, offender: p, error: error,
-          details: {latest: latestVersion, current: currentVersion, diff: diff}})
+        ruleErrs.push({
+          code: code,
+          severity: severity,
+          offender: usedPackage,
+          error: error,
+          replacements: [
+            usedPackage + "@" + currentVersion,
+            usedPackage + "@" + latestVersion
+          ],
+          details: currentVersion + " -> " + latestVersion,
+          detailObj: {
+            latest: latestVersion,
+            current: currentVersion,
+            diff: diff
+          }
+        })
       }
     }
     return ruleErrs;

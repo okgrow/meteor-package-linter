@@ -1,7 +1,7 @@
 Package.describe({
   name: "okgrow:package-linter",
   summary: "Linting your package.js files since Meteor 1.1",
-  version: "0.1.0",
+  version: "0.1.1",
   git: "https://github.com/okgrow/meteor-package-linter"
 });
 
