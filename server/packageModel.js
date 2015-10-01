@@ -82,10 +82,12 @@ PackageModel = function PackageModel (packageJsCodeHopefully) {
       },
       getModel: function () {
         return packageModel;
-      }
+      },
+      toString: function () { return "Package"; }
     },
     Npm: {
-      depends: function () {}
+      depends: function () {},
+      toString: function () { return "Npm"; }
     }
   };
 

@@ -7,8 +7,21 @@ Meteor.methods({
   },
   "okgrow:package-linter#getLintErrors": function (packageJsCodeHopefully) {
     check(packageJsCodeHopefully, String);
-    var packageModel = new PackageModel(packageJsCodeHopefully);
-    return Promise.await(PackageLinter.getLintErrors(packageModel));
+
+    var chain = Promise.resolve({}).then(function () {
+        return new PackageModel(packageJsCodeHopefully)
+      })
+      .then(PackageLinter.getLintErrors)
+      .catch(function (err) {
+        throw new Error(err);
+      });
+
+    try{
+      return Promise.await(chain);
+    }catch(err) {
+      console.log("err.toString: ", err.toString())
+      throw new Meteor.Error(err, err.toString());
+    }
   },
   "okgrow:package-linter#latestMeteorVersionOfPackage": function (name) {
     check(name, String);
