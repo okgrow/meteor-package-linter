@@ -1,3 +1,7 @@
+# Deprecated
+
+See [Deanius's repository](https://github.com/deanius/meteor-package-linter) instead
+
 # okgrow:package-linter
 
 http://okgrow-package-builder.meteor.com/linter
